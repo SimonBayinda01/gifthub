@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Post a Job - Uganda Jobs Hub</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<header>
+    <h1>Uganda Jobs Hub</h1>
+    <p>Post your job vacancy</p>
+
+    <nav>
+        <a href="index.html">Home</a>
+        <a href="login.html">Login</a>
+    </nav>
+</header>
+
+<main>
+
+<section>
+    <h2>Post a Job</h2>
+
+    <p>Choose a package:</p>
+
+    <select id="package">
+        <option value="Basic|10000">Basic - UGX 10,000</option>
+        <option value="Featured|25000">Featured - UGX 25,000</option>
+        <option value="Premium|50000">Premium - UGX 50,000</option>
+    </select>
+
+    <form id="jobForm">
+
+        <label>Employer Name</label>
+        <input type="text" id="employerName" required>
+
+        <label>Company</label>
+        <input type="text" id="company" required>
+
+        <label>Email</label>
+        <input type="email" id="email" required>
+
+        <label>Phone</label>
+        <input type="tel" id="phone" required>
+
+        <label>Job Title</label>
+        <input type="text" id="title" required>
+
+        <label>Location</label>
+        <input type="text" id="location" required>
+
+        <label>Description</label>
+        <textarea id="description" required></textarea>
+
+        <label>Salary</label>
+        <input type="text" id="salary">
+
+        <label>Mobile Money Payment Reference</label>
+        <input type="text" id="paymentReference" required>
+
+        <button type="submit">Submit Job</button>
+
+        <p id="result"></p>
+
+    </form>
+</section>
+
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script>
+
+const SUPABASE_URL = "https://zrcfgdnvwnxvqlhitrxg.supabase.co";
+const SUPABASE_KEY = "sb_publishable_fOw0gexQmWPzQlaaaiGVXQ_bgPE1crY";
+
+const supabaseClient = window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_KEY
+);
+
+document.getElementById("jobForm").addEventListener("submit", async function(event) {
+
+    event.preventDefault();
+
+    const selected = document.getElementById("package").value.split("|");
+
+    const packageName = selected[0];
+    const price = Number(selected[1]);
+
+    const { error } = await supabaseClient
+        .from("job_submissions")
+        .insert({
+            employer_name: document.getElementById("employerName").value,
+            company: document.getElementById("company").value,
+            email: document.getElementById("email").value,
+            phone: document.getElementById("phone").value,
+            title: document.getElementById("title").value,
+            location: document.getElementById("location").value,
+            description: document.getElementById("description").value,
+            salary: document.getElementById("salary").value,
+            package: packageName,
+            price: price,
+            payment_reference: document.getElementById("paymentReference").value
+        });
+
+    if (error) {
+        document.getElementById("result").textContent = error.message;
+        return;
+    }
+
+    document.getElementById("result").textContent =
+        "Job submitted successfully. We will verify your payment and approve the vacancy.";
+
+    document.getElementById("jobForm").reset();
+
+});
+
+</script>
+
+</body>
+</html>
