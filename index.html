@@ -95,6 +95,11 @@ const supabaseClient = window.supabase.createClient(
 );
 
 async function loadJobs() {
+    const jobsContainer = document.getElementById("jobs");
+
+    if (!jobsContainer) {
+        return;
+    }
 
     const { data, error } = await supabaseClient
         .from("jobs")
@@ -102,36 +107,33 @@ async function loadJobs() {
         .order("created_at", { ascending: false });
 
     if (error) {
+        jobsContainer.innerHTML =
+            "<p>Unable to load jobs.</p>";
         console.error(error);
         return;
     }
 
-    const jobsContainer = document.getElementById("jobs");
-
-    if (!jobsContainer) {
+    if (!data || data.length === 0) {
+        jobsContainer.innerHTML =
+            "<p>No jobs available yet.</p>";
         return;
     }
 
     jobsContainer.innerHTML = "";
 
     data.forEach(function(job) {
-
-        const jobCard = document.createElement("div");
-
-        jobCard.innerHTML = `
-            <h3>${job.title}</h3>
-            <p><strong>Company:</strong> ${job.company}</p>
-            <p><strong>Location:</strong> ${job.location}</p>
-            <p><strong>Salary:</strong> ${job.salary || "Not specified"}</p>
-            <p>${job.description}</p>
-            <button>Apply</button>
+        jobsContainer.innerHTML += `
+            <article>
+                <h3>${job.title}</h3>
+                <p><strong>${job.company}</strong></p>
+                <p>${job.location}</p>
+                <p>${job.salary || "Salary not specified"}</p>
+                <p>${job.description}</p>
+                <button>Apply</button>
+            </article>
         `;
-
-        jobsContainer.appendChild(jobCard);
     });
 }
 
 loadJobs();
 </script>
-</body>
-</html>
