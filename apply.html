@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Apply - Uganda Jobs Hub</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<header>
+    <h1>Uganda Jobs Hub</h1>
+    <nav>
+        <a href="index.html">Home</a>
+    </nav>
+</header>
+
+<main>
+
+<section>
+    <h2>Apply for this job</h2>
+
+    <form id="applicationForm">
+
+        <label>Full Name</label>
+        <input type="text" id="fullName" required>
+
+        <label>Email</label>
+        <input type="email" id="email" required>
+
+        <label>Phone Number</label>
+        <input type="tel" id="phone" required>
+
+        <label>Message</label>
+        <textarea id="message"></textarea>
+
+        <button type="submit">Submit Application</button>
+
+        <p id="result"></p>
+
+    </form>
+</section>
+
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script>
+
+const SUPABASE_URL = "https://zrcfgdnvwnxvqlhitrxg.supabase.co";
+const SUPABASE_KEY = "sb_publishable_fOw0gexQmWPzQlaaaiGVXQ_bgPE1crY";
+
+const supabaseClient = window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_KEY
+);
+
+const params = new URLSearchParams(window.location.search);
+const jobId = params.get("job");
+
+const form = document.getElementById("applicationForm");
+const result = document.getElementById("result");
+
+form.addEventListener("submit", async function(event) {
+
+    event.preventDefault();
+
+    result.textContent = "Submitting...";
+
+    const { error } = await supabaseClient
+        .from("applications")
+        .insert({
+            job_id: jobId,
+            full_name: document.getElementById("fullName").value,
+            email: document.getElementById("email").value,
+            phone: document.getElementById("phone").value,
+            message: document.getElementById("message").value
+        });
+
+    if (error) {
+        result.textContent = error.message;
+        return;
+    }
+
+    result.textContent = "Application submitted successfully!";
+    form.reset();
+
+});
+
+</script>
+
+</body>
+</html>
