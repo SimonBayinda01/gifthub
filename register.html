@@ -8,7 +8,6 @@
 </head>
 
 <body>
-
   <header>
     <h1>Gifthub</h1>
   </header>
@@ -47,25 +46,24 @@
     import { createClient } from
       'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
 
-    https://zrcfgdnvwnxvqlhitrxg.supabase.co/rest/v1/
-    sb_publishable_fOw0gexQmWPzQlaaaiGVXQ_bgPE1crY
+    const SUPABASE_URL = 'https://zrcfgdnvwnxvqlhitrxg.supabase.co/rest/v1/';
+    const SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_fOw0gexQmWPzQlaaaiGVXQ_bgPE1crY';
 
     const supabase = createClient(
-      SUPABASE_URL,https://zrcfgdnvwnxvqlhitrxg.supabase.co/rest/v1/
-      SUPABASE_PUBLISHABLE_KEYsb_publishable_fOw0gexQmWPzQlaaaiGVXQ_bgPE1crY
+      SUPABASE_URL,
+      SUPABASE_PUBLISHABLE_KEY
     );
 
-    const form = document.getElementById('signupForm');
-    const message = document.getElementById('message');
-
-    form.addEventListener('submit', async (event) => {
+    document.getElementById('signupForm').addEventListener('submit', async function(event) {
       event.preventDefault();
+
+      const message = document.getElementById('message');
 
       const fullName = document.getElementById('fullName').value.trim();
       const email = document.getElementById('email').value.trim();
       const password = document.getElementById('password').value;
 
-      message.textContent = 'Creating your account...';
+      message.textContent = 'Creating account...';
 
       const { error } = await supabase.auth.signUp({
         email: email,
@@ -79,13 +77,11 @@
 
       if (error) {
         message.textContent = error.message;
-        return;
+      } else {
+        message.textContent =
+          'Account created. Please check your email to confirm your account.';
       }
-
-      message.textContent =
-        'Account created. Check your email if confirmation is required.';
     });
   </script>
-
 </body>
 </html>
