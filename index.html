@@ -79,5 +79,53 @@
         <p>© 2026 Uganda Jobs Hub</p>
     </footer>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+const SUPABASE_URL = "https://zrcfgdnvwnxvqlhitrxg.supabase.co";
+const SUPABASE_KEY = "sb_publishable_fOw0gexQmWPzQlaaaiGVXQ_bgPE1crY";
+
+const supabaseClient = window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_KEY
+);
+
+async function loadJobs() {
+
+    const { data, error } = await supabaseClient
+        .from("jobs")
+        .select("*")
+        .order("created_at", { ascending: false });
+
+    if (error) {
+        console.error(error);
+        return;
+    }
+
+    const jobsContainer = document.getElementById("jobs");
+
+    if (!jobsContainer) {
+        return;
+    }
+
+    jobsContainer.innerHTML = "";
+
+    data.forEach(function(job) {
+
+        const jobCard = document.createElement("div");
+
+        jobCard.innerHTML = `
+            <h3>${job.title}</h3>
+            <p><strong>Company:</strong> ${job.company}</p>
+            <p><strong>Location:</strong> ${job.location}</p>
+            <p><strong>Salary:</strong> ${job.salary || "Not specified"}</p>
+            <p>${job.description}</p>
+            <button>Apply</button>
+        `;
+
+        jobsContainer.appendChild(jobCard);
+    });
+}
+
+loadJobs();
+</script>
 </body>
 </html>
