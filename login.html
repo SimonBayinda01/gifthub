@@ -39,6 +39,37 @@
       <a href="index.html">Back to homepage</a>
     </p>
   </main>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script
+   <script>
+const SUPABASE_URL = "https://zrcfgdnvwnxvqlhitrxg.supabase.co";
+const SUPABASE_KEY = "sb_publishable_fOw0gexQmWPzQlaaaiGVXQ_bgPE1crY";
+
+const supabaseClient = window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_KEY
+);
+
+const loginForm = document.querySelector("form");
+
+loginForm.addEventListener("submit", async function(event) {
+    event.preventDefault();
+
+    const email = document.querySelector('input[type="email"]').value;
+    const password = document.querySelector('input[type="password"]').value;
+
+    const { data, error } = await supabaseClient.auth.signInWithPassword({
+        email: email,
+        password: password
+    });
+
+    if (error) {
+        alert(error.message);
+        return;
+    }
+
+    alert("Login successful!");
+    window.location.href = "index.html";
+});
+</script>                                                                  >
 </body>
 </html>
