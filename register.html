@@ -16,30 +16,76 @@
   <main class="container">
     <h2>Create Account</h2>
 
-    <form>
+    <form id="signupForm">
       <label>Full Name</label>
-      <input type="text" required>
+      <input id="fullName" type="text" required>
 
       <br><br>
 
       <label>Email</label>
-      <input type="email" required>
+      <input id="email" type="email" required>
 
       <br><br>
 
       <label>Password</label>
-      <input type="password" required>
+      <input id="password" type="password" minlength="6" required>
 
       <br><br>
 
       <button type="submit">Create Account</button>
     </form>
 
+    <p id="message"></p>
+
     <p>
       Already have an account?
-      <a href="index.html">Back to homepage</a>
+      <a href="login.html">Login</a>
     </p>
   </main>
+
+  <script type="module">
+    import { createClient } from
+      'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
+
+    https://zrcfgdnvwnxvqlhitrxg.supabase.co/rest/v1/
+    sb_publishable_fOw0gexQmWPzQlaaaiGVXQ_bgPE1crY
+
+    const supabase = createClient(
+      SUPABASE_URL,https://zrcfgdnvwnxvqlhitrxg.supabase.co/rest/v1/
+      SUPABASE_PUBLISHABLE_KEYsb_publishable_fOw0gexQmWPzQlaaaiGVXQ_bgPE1crY
+    );
+
+    const form = document.getElementById('signupForm');
+    const message = document.getElementById('message');
+
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+
+      const fullName = document.getElementById('fullName').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value;
+
+      message.textContent = 'Creating your account...';
+
+      const { error } = await supabase.auth.signUp({
+        email: email,
+        password: password,
+        options: {
+          data: {
+            full_name: fullName
+          }
+        }
+      });
+
+      if (error) {
+        message.textContent = error.message;
+        return;
+      }
+
+      message.textContent =
+        'Account created. Check your email if confirmation is required.';
+    });
+  </script>
 
 </body>
 </html>
