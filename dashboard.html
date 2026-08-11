@@ -1,1 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Uganda Jobs Hub</title>
+    <link rel="stylesheet" href="style.css">
+</head>
 
+<body>
+
+<header>
+    <h1>Uganda Jobs Hub</h1>
+    <p>Welcome to your dashboard</p>
+
+    <nav>
+        <a href="index.html">Home</a>
+        <a href="dashboard.html">Dashboard</a>
+        <a href="#" id="logout">Logout</a>
+    </nav>
+</header>
+
+<main>
+
+<section>
+    <h2>Welcome, <span id="userName">User</span>!</h2>
+
+    <p>Email: <span id="userEmail"></span></p>
+</section>
+
+<section>
+    <h2>Find Jobs</h2>
+
+    <p>Browse available jobs and find your next opportunity.</p>
+
+    <button onclick="window.location.href='index.html'">
+        Browse Jobs
+    </button>
+</section>
+
+<section>
+    <h2>Your Applications</h2>
+
+    <p>You have not applied for any jobs yet.</p>
+</section>
+
+</main>
+
+<footer>
+    <p>© 2026 Uganda Jobs Hub</p>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script>
+
+const SUPABASE_URL = "https://zrcfgdnvwnxvqlhitrxg.supabase.co";
+
+const SUPABASE_KEY = "sb_publishable_fOw0gexQmWPzQlaaaiGVXQ_bgPE1crY";
+
+const supabaseClient = window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_KEY
+);
+
+async function loadUser() {
+
+    const { data: { user } } =
+        await supabaseClient.auth.getUser();
+
+    if (!user) {
+        window.location.href = "login.html";
+        return;
+    }
+
+    document.getElementById("userEmail").textContent =
+        user.email;
+
+    document.getElementById("userName").textContent =
+        user.user_metadata?.full_name || "User";
+}
+
+document.getElementById("logout").addEventListener("click", async function(event) {
+
+    event.preventDefault();
+
+    await supabaseClient.auth.signOut();
+
+    window.location.href = "login.html";
+});
+
+loadUser();
+
+</script>
+
+</body>
+</html>
