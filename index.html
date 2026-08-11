@@ -129,7 +129,9 @@ async function loadJobs() {
                 <p>${job.location}</p>
                 <p>${job.salary || "Salary not specified"}</p>
                 <p>${job.description}</p>
-                <button>Apply</button>
+                <button onclick="window.location.href='apply.html?job=${job.id}'">
+    Apply
+</button>
             </article>
         `;
     });
