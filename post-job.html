@@ -24,9 +24,9 @@
 <section>
     <h2>Post a Job</h2>
 
-    <p>Choose a package:</p>
+    <p><strong>Choose a package:</strong></p>
 
-    <select id="package">
+    <select id="package" required>
         <option value="Basic|10000">Basic - UGX 10,000</option>
         <option value="Featured|25000">Featured - UGX 25,000</option>
         <option value="Premium|50000">Premium - UGX 50,000</option>
@@ -34,32 +34,29 @@
 
     <form id="jobForm">
 
-        <label>Employer Name</label>
+        <label for="employerName">Employer Name</label>
         <input type="text" id="employerName" required>
 
-        <label>Company</label>
+        <label for="company">Company</label>
         <input type="text" id="company" required>
 
-        <label>Email</label>
+        <label for="email">Email</label>
         <input type="email" id="email" required>
 
-        <label>Phone</label>
+        <label for="phone">Phone</label>
         <input type="tel" id="phone" required>
 
-        <label>Job Title</label>
+        <label for="title">Job Title</label>
         <input type="text" id="title" required>
 
-        <label>Location</label>
+        <label for="location">Location</label>
         <input type="text" id="location" required>
 
-        <label>Description</label>
+        <label for="description">Job Description</label>
         <textarea id="description" required></textarea>
 
-        <label>Salary</label>
+        <label for="salary">Salary</label>
         <input type="text" id="salary">
-
-        <label>Mobile Money Payment Reference</label>
-        <input type="text" id="paymentReference" required>
 
         <button type="submit">Submit Job</button>
 
@@ -86,6 +83,9 @@ document.getElementById("jobForm").addEventListener("submit", async function(eve
 
     event.preventDefault();
 
+    const result = document.getElementById("result");
+    result.textContent = "Submitting...";
+
     const selected = document.getElementById("package").value.split("|");
 
     const packageName = selected[0];
@@ -94,29 +94,27 @@ document.getElementById("jobForm").addEventListener("submit", async function(eve
     const { error } = await supabaseClient
         .from("job_submissions")
         .insert({
-            employer_name: document.getElementById("employerName").value,
-            company: document.getElementById("company").value,
-            email: document.getElementById("email").value,
-            phone: document.getElementById("phone").value,
-            title: document.getElementById("title").value,
-            location: document.getElementById("location").value,
-            description: document.getElementById("description").value,
-            salary: document.getElementById("salary").value,
+            employer_name: document.getElementById("employerName").value.trim(),
+            company: document.getElementById("company").value.trim(),
+            email: document.getElementById("email").value.trim(),
+            phone: document.getElementById("phone").value.trim(),
+            title: document.getElementById("title").value.trim(),
+            location: document.getElementById("location").value.trim(),
+            description: document.getElementById("description").value.trim(),
+            salary: document.getElementById("salary").value.trim(),
             package: packageName,
-            price: price,
-            payment_reference: document.getElementById("paymentReference").value
+            price: price
         });
 
     if (error) {
-        document.getElementById("result").textContent = error.message;
+        result.textContent = "Error: " + error.message;
         return;
     }
 
-    document.getElementById("result").textContent =
-        "Job submitted successfully. We will verify your payment and approve the vacancy.";
+    result.textContent =
+        "Job submitted successfully. An administrator will review it before publication.";
 
     document.getElementById("jobForm").reset();
-
 });
 
 </script>
